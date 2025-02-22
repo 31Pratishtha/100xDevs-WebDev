@@ -1,0 +1,28 @@
+{
+  "todos": [
+    {
+      "id": 2,
+      "item": "complete webdev"
+    },
+    {
+      "id": 3,
+      "item": "learn about finances"
+    },
+    {
+      "id": 4,
+      "item": "plan content creation"
+    },
+    {
+      "id": 5,
+      "item": "talk on call"
+    },
+    {
+      "id": 6,
+      "item": "listen good music"
+    },
+    {
+      "id": 7,
+      "item": "sing along"
+    }
+  ]
+}

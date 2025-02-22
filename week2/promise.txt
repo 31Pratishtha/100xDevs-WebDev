@@ -1,0 +1,1 @@
+      Correct, you do not need to specify the arguments for the random function when you pass it to the Promise constructor. The Promise constructor     
