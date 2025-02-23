@@ -14,25 +14,15 @@ app.use((req, res, next) => {
 })
 
 
-// const generateToken = () => {
-//   let options = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
-//   let token = ''
-//   for(let i = 0; i < 32; i++){
-//     token = token + options[Math.floor(Math.random() *options.length)]
-//   }
-//   return token;
-// }
-
 app.post('/signup', (req, res) => {
   const username = req.body.username
   const password = req.body.password
-  
+
   users.push({
     username: username,
     password: password
   })
-  
+
   res.json({
     message: "you are signed up."
   })
@@ -42,51 +32,52 @@ app.post('/signup', (req, res) => {
 app.post('/signin', (req, res) => {
   const username = req.body.username
   const password = req.body.password
-  
-  const foundUser = users.find((u) => {
-    if(u.username === username && u.password === password){
-      return true
-    }
-    else{
-      return false
-    }
-  })
-  
-  if(foundUser){
+
+  const foundUser = users.find((u) => (u.username === username && u.password === password))
+
+  if (!foundUser) {
+    res.json({
+      message: "Incorrect credentials"
+    })
+    return
+  }
+  else {
     const token = jwt.sign({
       username: username
     }, JWT_SECRET)
-    // foundUser.token = token
+
     res.json({
       token: token
     })
   }
-  else{
-    res.status(403).send({
-      message: "Invalid username or password"
-    })
-  }
 })
 
-app.get('/me', (req, res) => {
+app.use((req, res, next) => {
   const token = req.headers.authorization
   const decodedInfo = jwt.verify(token, JWT_SECRET)
-  const username = decodedInfo.username
 
-  let foundUser = null
-  foundUser = users.find((u) => u.username === username)
-
-  if(foundUser){
-    res.json({
-      username: foundUser.username,
-      password: foundUser.password
-    })
+  if (decodedInfo.username) {
+    req.username = decodedInfo.username
+    next()
   } else {
     res.json({
       message: "token invalid"
     })
   }
+})
 
+
+app.get('/me', (req, res) => {
+  
+  let foundUser = null
+
+  foundUser = users.find((u) => u.username === req.username)
+
+
+  res.json({
+    username: foundUser.username,
+    password: foundUser.password
+  })
 })
 
 
