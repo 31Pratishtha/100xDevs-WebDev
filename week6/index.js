@@ -1,5 +1,10 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express()
 app.use(express.json())
@@ -8,11 +13,29 @@ const JWT_SECRET = "iampratishthaandiamawebdeveloper"
 
 const users = []
 
+function auth(req, res, next) {
+  const token = req.headers.authorization
+  const decodedInfo = jwt.verify(token, JWT_SECRET)
+
+  if (decodedInfo.username) {
+    req.username = decodedInfo.username
+    next()
+  } else {
+    res.json({
+      message: "token invalid"
+    })
+  }
+}
+
 app.use((req, res, next) => {
   console.log(users);
   next()
 })
 
+//localhost:3000
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + "/public/index.html")
+})
 
 app.post('/signup', (req, res) => {
   const username = req.body.username
@@ -52,22 +75,10 @@ app.post('/signin', (req, res) => {
   }
 })
 
-app.use((req, res, next) => {
-  const token = req.headers.authorization
-  const decodedInfo = jwt.verify(token, JWT_SECRET)
-
-  if (decodedInfo.username) {
-    req.username = decodedInfo.username
-    next()
-  } else {
-    res.json({
-      message: "token invalid"
-    })
-  }
-})
 
 
-app.get('/me', (req, res) => {
+
+app.get('/me', auth, (req, res) => {
   
   let foundUser = null
 
