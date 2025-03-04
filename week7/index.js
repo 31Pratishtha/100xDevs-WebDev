@@ -4,12 +4,34 @@ import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose'
 import { auth, JWT_SECRET } from './auth.js'
 import bcrypt from 'bcryptjs'
+import { z } from 'zod'
 
 const app = express()
 mongoose.connect("mongodb+srv://Pratishtha:Mongodbpswd@backenddb.kn00wnx.mongodb.net/todo-app")
 app.use(express.json())
 
 app.post('/signup', async (req, res) => {
+
+  const requiredBody = z.object({
+    email: z.string().min(3).max(100).email(),
+    name: z.string().min(3).max(100),
+    password: z.string().min(8).max(30)
+    .regex(/[A-Z]/, "must contain at least one uppercase letter")
+    .regex(/[a-z]/, "must contain at least one lowercase letter")
+    .regex(/\d/, "must contain at least one lowercase letter")
+  })
+
+  const parsedDataWithSuccess = requiredBody.safeParse(req.body)
+
+  if (!parsedDataWithSuccess.success) {
+    res.json({
+      message: "Incorrect input format",
+      error: parsedDataWithSuccess.error
+    })
+
+    return
+  }
+
   const name = req.body.name
   const email = req.body.email
   const password = req.body.password
