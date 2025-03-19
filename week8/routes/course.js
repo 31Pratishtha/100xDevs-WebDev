@@ -6,6 +6,7 @@ const Router = express.Router
 
 const courseRouter = Router()
 
+//if we are creating a separate purchase model
 courseRouter.post("/purchase", userMiddleware, async (req, res) => {
   const { courseId } = req.body
   const userId = req.userId
@@ -19,6 +20,7 @@ courseRouter.post("/purchase", userMiddleware, async (req, res) => {
     message: "Purchase successful"
   })
 })
+
 courseRouter.get("/preview", async (req, res) => {
 
   const courses = await courseModel.find({})

@@ -68,7 +68,7 @@ userRouter.post("/signin", async (req, res) => {
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password)
-  if (passwordMatch){
+  if (passwordMatch) {
     const token = jwt.sign({
       id: user._id
     }, process.env.USER_SECRET)
@@ -82,11 +82,32 @@ userRouter.post("/signin", async (req, res) => {
   }
 })
 
+userRouter.put("/purchase", userMiddleware, async (req, res) => {
+  const { courseId } = req.body
+  const userId = req.userId
+
+  try{
+    await userModel.updateOne({
+      _id: userId
+    }, {
+        "$push": {
+          purchasedCourses: courseId
+      }
+    })
+  } catch(e) {
+    console.log('error: ', e);
+  }
+
+  res.json({
+    message: "Course purchased !"
+  })
+})
+
 userRouter.get("/purchases", userMiddleware, async (req, res) => {
 
   const userId = req.userId
 
-  const userCourses = await purchaseModel.find({userId})
+  const userCourses = await purchaseModel.find({ userId })
 
   res.json({ userCourses })
 })

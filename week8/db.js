@@ -7,6 +7,10 @@ const userSchema = new Schema({
   email: { type: String, unique: true },
   password: String,
   name: String,
+  purchasedCourses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'course'
+  }]
 })
 
 const adminSchema = new Schema({
