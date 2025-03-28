@@ -1,7 +1,7 @@
-// import { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 
-// export const usePostTitle = () => {
-//   const [post, setPost] = useState([])
+export const usePostTitle = () => {
+  const [post, setPost] = useState([])
 
   async function getPosts() {
     const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
@@ -13,31 +13,31 @@
     getPosts()
   }, [])
 
-//   return post.title
+  return post.title
 
-// }
+}
 
-// export function useFetch(url) {
-//   const [data, setData] = useState({})
-//   const [loading, setLoading] = useState(true)
+export function useFetch(url) {
+  const [data, setData] = useState({})
+  const [loading, setLoading] = useState(true)
 
-//   async function getDetails() {
-//     setLoading(true)
-//     const res = await fetch(url)
-//     const json = await res.json()
-//     setData(json)
-//     setLoading(false)
-//   }
+  async function getDetails() {
+    setLoading(true)
+    const res = await fetch(url)
+    const json = await res.json()
+    setData(json)
+    setLoading(false)
+  }
 
-//   useEffect(() => {
-//     getDetails()
-//   }, [url])
+  useEffect(() => {
+    getDetails()
+  }, [url])
 
-//   useEffect(() => {
-//     const refetch = setInterval(getDetails, 3 * 1000)
+  useEffect(() => {
+    const refetch = setInterval(getDetails, 3 * 1000)
 
-//     return () => clearInterval(refetch)
-//   }, [])
+    return () => clearInterval(refetch)
+  }, [])
 
-//   return { data, loading }
-// }
+  return { data, loading }
+}
