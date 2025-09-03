@@ -23,7 +23,7 @@ wss.on('connection', (socket) => {
         socket, 
         room: parsedMsg.payload.roomId
       })
-    }
+    }``
 
     if(parsedMsg.type === 'chat'){
       console.log('User wants to chat')
